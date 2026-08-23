@@ -1,0 +1,17 @@
+# Local learning notes — not for the public repo
+cicdtesting.md
+
+# Compiled binaries
+battleship
+tests
+*.o
+*.out
+*.dSYM/
+
+# Course submission artifacts
+*.zip
+coj@cs32.seas.ucla.edu
+
+# Editor / tooling
+.claude/
+.DS_Store
