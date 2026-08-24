@@ -5,11 +5,15 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [g++, clang++]
     steps:
       - uses: actions/checkout@v4
 
       - name: Build
-        run: g++ -std=c++20 -Wall -Wextra Board.cpp Game.cpp Player.cpp test_main.cpp -o tests
+        run: ${{ matrix.compiler }} -std=c++20 -Wall -Wextra Board.cpp Game.cpp Player.cpp test_main.cpp -o tests
 
       - name: Run tests
         run: ./tests
