@@ -59,6 +59,8 @@ static bool addStandardShips(Game& g) {
 // ── Board: placement ────────────────────────────────────────────────────────
 void test_board_placement() {
     SECTION("Board: placeShip / unplaceShip");
+    CHECK(1 == 2);   // TEMPORARY - proving CI catches failures
+
     Game g(10, 10);
     addStandardShips(g);
     Board b(g);
