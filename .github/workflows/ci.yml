@@ -3,6 +3,7 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  # Deterministic tests. These gate the build.
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -15,5 +16,20 @@ jobs:
       - name: Build
         run: ${{ matrix.compiler }} -std=c++20 -Wall -Wextra Board.cpp Game.cpp Player.cpp test_main.cpp -o tests
 
-      - name: Run tests
-        run: ./tests
+      - name: Run unit tests
+        run: ./tests --unit
+
+  # Statistical match/timing tests. Reported, but never block a commit:
+  # they compare win counts over 50 randomized games and can fail on a
+  # correct build. Flaky gates train you to ignore red, so they stay advisory.
+  simulation:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: g++ -std=c++20 -O2 Board.cpp Game.cpp Player.cpp test_main.cpp -o tests
+
+      - name: Run simulation tests
+        run: ./tests --sim

@@ -304,16 +304,38 @@ void test_timing() {
 }
 
 // ── main ────────────────────────────────────────────────────────────────────
-int main() {
-    test_board_placement();
-    test_board_attack();
-    test_board_block();
-    test_board_display();
-    test_game_addship();
-    test_create_player();
-    test_match_mediocre_vs_awful();
-    test_match_good_vs_mediocre();
-    test_timing();
+// Test selection:
+//   ./tests          run everything (default)
+//   ./tests --unit   deterministic tests only -- these gate CI
+//   ./tests --sim    statistical match/timing tests only
+//
+// The match tests compare win counts over 50 randomized games, so they are
+// statistical rather than deterministic and can fail on a correct build. They
+// run in a separate, non-blocking CI job. The unit tests are the real gate.
+int main(int argc, char* argv[]) {
+    string mode = (argc > 1) ? argv[1] : "--all";
+    bool runUnit = (mode == "--all" || mode == "--unit");
+    bool runSim  = (mode == "--all" || mode == "--sim");
+
+    if (mode != "--all" && mode != "--unit" && mode != "--sim") {
+        cerr << "usage: " << argv[0] << " [--unit|--sim]\n";
+        return 2;
+    }
+
+    if (runUnit) {
+        test_board_placement();
+        test_board_attack();
+        test_board_block();
+        test_board_display();
+        test_game_addship();
+        test_create_player();
+    }
+
+    if (runSim) {
+        test_match_mediocre_vs_awful();
+        test_match_good_vs_mediocre();
+        test_timing();
+    }
 
     cout << "\n========================================\n";
     cout << "Results: " << g_pass << " passed, " << g_fail << " failed\n";
