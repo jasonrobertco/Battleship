@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build
-        run: g++ -std=c++20 -Wall Board.cpp Game.cpp Player.cpp test_main.cpp -o tests
+        run: g++ -std=c++20 -Wall -Wextra Board.cpp Game.cpp Player.cpp test_main.cpp -o tests
 
       - name: Run tests
         run: ./tests
